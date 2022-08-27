@@ -20,6 +20,8 @@ import {
   MaxBotLifetime,
   MaxPossibleEnergyForABot,
   MudLayerHeight,
+  MutateNeuronsMaximum,
+  MutateNeuronsSlightlyMaximum,
   NeuronInputLayerIndex,
   NeuronsInLayer,
   NumberOfMutationMarkers,
@@ -112,7 +114,7 @@ export class Bot extends Object {
   brain: BotNeuralNet = new BotNeuralNet(); // ???
 
   // Bot energy, if this is 0 bot dies
-  energy: number;
+  energy: number = 100;
 
   // if this is not 0, bot does nothing at his turn
   stunned: number;
@@ -198,11 +200,30 @@ export class Bot extends Object {
     }
   }
 
-  //Main mutate function
-  mutate(): void {}
+  // Main mutate function
+  mutate(): void {
+    // Change next mutation marker
+    this.changeMutationMarker();
 
-  // Draw bot outline and his head
-  // drawOutlineAndHead(rect: SDL_Rect): void {};
+    // Mutate brain
+    for (let i = 0; i < 1 + randomVal(MutateNeuronsMaximum + 1); ++i) {
+      this.brain.mutate();
+    }
+
+    for (let s = 0; s < 1 + randomVal(MutateNeuronsSlightlyMaximum + 1); ++s) {
+      this.brain.mutateSlightly();
+    }
+
+    // Change color
+    if (ChangeColorSlightly) {
+      this.changeColor(20);
+    }
+
+    /*if (RandomPercentX10(RandomColorChancePercentX100))
+    {
+      RandomizeColor();
+    }*/
+  }
 
   //----------------------------------------------------------------------------------------------
   // These functions are used for experiments such as adaptation,
@@ -219,7 +240,9 @@ export class Bot extends Object {
     // Is on land?
     if (this.y < FieldCellsHeight - Bot.adaptationStep5) {
       if (this.lifetime === 1) {
-        if (randomPercentX10(Bot.adaptationStep)) return true;
+        if (randomPercentX10(Bot.adaptationStep)) {
+          return true;
+        }
       }
     }
     // Is in ocean?
@@ -228,7 +251,9 @@ export class Bot extends Object {
       this.y < FieldCellsHeight - Bot.adaptationStep7
     ) {
       if (this.lifetime === 1) {
-        if (randomPercentX10(Bot.adaptationStep2)) return true;
+        if (randomPercentX10(Bot.adaptationStep2)) {
+          return true;
+        }
       }
     }
 
@@ -271,8 +296,9 @@ export class Bot extends Object {
     }
   }
 
-  //Use neural network (feed forward)
+  // Use neural network (feed forward)
   think(input: BrainInput): BrainOutput {
+
     // Stunned means the creature can not act
     if (this.stunned) {
       --this.stunned;
@@ -307,6 +333,7 @@ export class Bot extends Object {
     // Compute
     this.brain.process();
     const toRet = this.brain.getOutput();
+    console.log('toRet', toRet)
 
     // Cannot multiply if not ready
     if (this.fertilityDelay) {
@@ -355,7 +382,7 @@ export class Bot extends Object {
       --this.direction;
     }
 
-    this.direction %= 8;
+    this.direction = Math.abs(Math.floor(this.direction % 8));
   }
 
   // Give a bot some energy
@@ -521,6 +548,8 @@ export class Bot extends Object {
     // New bot
     if (!prototype) {
       this.randomizeMarkers();
+    } else {
+      this.brain = new BotNeuralNet(prototype.brain);
     }
 
     this.energy = Energy;
@@ -533,15 +562,15 @@ export class Bot extends Object {
     if (!prototype) {
       this.brain.randomize();
     }
-    //
-    // // Set brain to dummy brain
-    // // this.brain.setDummy();
+
+    // Set brain to dummy brain
+    // this.brain.setDummy();
 
     if (prototype) {
       // Copy parent's markers and color
-      this.mutationMarkers = prototype.mutationMarkers;
+      this.mutationMarkers = [...prototype.mutationMarkers];
       this.nextMarker = prototype.nextMarker;
-      this.color = prototype.color;
+      this.color = [...prototype.color];
     } else {
       this.randomizeColor(); // random color
     }

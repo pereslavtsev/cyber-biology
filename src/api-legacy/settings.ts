@@ -90,7 +90,7 @@ export const BotOutlineColor = [111, 111, 111, 255]; // Blue water
 
 // #define RockDrawColor 62, 62, 62, 255
 // #define OrganicWateDrawColor 200, 200, 200, 255
-// #define AppleDrawColor 0, 100, 0, 255
+export const AppleDrawColor = [0, 100, 0, 255];
 
 export const DrawOcean = true;
 export const OceanColor = [150, 150, 255, 255]; // Blue water
@@ -109,7 +109,7 @@ export const SkipFramesAtStart = 10;
 export const StartOnPause = true;
 
 export const SpawnOneAtStart = true; // TODO: false
-export const SpawnControlGroupAtStart = false;
+export const SpawnControlGroupAtStart = false; // TODO: false
 export const ControlGroupSize = 6000;
 //-----------------------------------------------------------------
 
@@ -140,7 +140,7 @@ export const RockCanBeEaten = false;
 export const SpawnOrganicWasteWhenBotDies = false;
 export const OrganicWasteAlwaysFalls = true;
 
-export const UseApples = false;
+export const UseApples = false; // TODO: false
 export const DefaultAppleEnergy = 125;
 export const AppleSpawnInterval = 1;
 export const SpawnAppleInCellChance = 4;
@@ -156,8 +156,8 @@ export const ChangeColorSlightly = true;
 export const PresetRandomColors = true;
 export const RandomColorEveryNewMarkersSet = false;
 
-// #define MutateNeuronsMaximum 6
-// #define MutateNeuronsSlightlyMaximum 2
+export const MutateNeuronsMaximum = 6;
+export const MutateNeuronsSlightlyMaximum = 2;
 
 export const UseSeasons = false;
 export const ChangeSeasonInterval = 4000;

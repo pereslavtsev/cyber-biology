@@ -13,7 +13,7 @@ import { randomPercent, randomVal, repeat } from "./my-types";
 export class BrainInput {
   energy: number = 0.0;
   vision: number = 0.0;
-  isRelative: number = 0.0;
+  isRelative: number = 1.0;
   rotation: number = 0.0;
   height: number = 0.0;
 }
@@ -24,13 +24,26 @@ export class BrainInput {
 export class BrainOutput {
   static NumFields: number = NeuronsInLayer;
 
-  rotate: number = 0;
-  move: number = 0;
-  photosynthesis: number = 0;
-  divide: number = 0;
-  attack: number = 0;
+  get rotate(): number {
+    return Math.round(this.fields[0]);
+  }
+  get move(): number {
+    return Math.round(this.fields[1]);
+  }
+  get photosynthesis(): number {
+    return Math.round(this.fields[2]);
+  }
+  get divide(): number {
+    return Math.round(this.fields[3]);
+  }
+  set divide(value: number) {
+    this.fields[3] = Math.round(value);
+  }
+  get attack(): number {
+    return Math.round(this.fields[4]);
+  }
 
-  fields: number[] = [];
+  readonly fields: number[] = [0, 0, 0, 0, 0];
 
   static GetEmptyBrain(): BrainOutput {
     return new BrainOutput();
@@ -77,7 +90,6 @@ export class BotNeuralNet {
   allMemory: number[][] = [];
 
   // Constructors
-  constructor();
   constructor(prototype?: BotNeuralNet) {
     for (let xi = 0; xi < NumNeuronLayers; ++xi) {
       this.allNeurons[xi] = Array.from(Array(NeuronsInLayer).keys()).map(
@@ -99,7 +111,7 @@ export class BotNeuralNet {
     this.clearMemory();
 
     if (prototype) {
-      this.allNeurons = prototype.allNeurons;
+      this.allNeurons = [...prototype.allNeurons];
     }
   }
 
@@ -194,6 +206,8 @@ export class BotNeuralNet {
 
       value = this.activation(value + n.bias);
     }
+
+    console.log('this.allNeurons[NeuronOutputLayerIndex]', this.allValues[NeuronOutputLayerIndex])
   }
 
   /**

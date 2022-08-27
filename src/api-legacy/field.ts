@@ -1,5 +1,5 @@
 // Don't touch
-import { Object } from "./object";
+import { Object as ObjectClass } from "./object";
 import { Point, randomPercent, randomPercentX10, randomVal } from "./my-types";
 import {
   AppleSpawnInterval,
@@ -73,7 +73,7 @@ let season: Season;
  */
 export class Field {
   // All cells as 2d array
-  allCells: Array<Array<Object | null>> = [];
+  allCells: Array<Array<ObjectClass | null>> = [];
 
   // Needed to calculate number of active objects and bots (calculated on every frame)
   objectsTotal: number = 0;
@@ -89,13 +89,12 @@ export class Field {
       return new Point(X, Y);
     }
 
-    let tx: number;
     let tmpArray: Point[] = Array.from(Array(9).keys()).map(() => new Point());
     let i = 0;
 
     for (let cx = -1; cx < 2; ++cx) {
       for (let cy = -1; cy < 2; ++cy) {
-        tx = this.validateX(X + cx);
+        const tx = this.validateX(X + cx);
 
         if (this.isInBounds(tx, Y + cy)) {
           if (!this.allCells[tx][Y + cy]) {
@@ -105,7 +104,7 @@ export class Field {
       }
     }
 
-    //Get random free cell from array
+    // Get random free cell from array
     if (i > 0) {
       return tmpArray[randomVal(i)];
     }
@@ -143,13 +142,12 @@ export class Field {
 
   // tick function for single threaded build
   tick_single_thread(): void {
-    let tmpObj: Object | null;
     this.objectsTotal = 0;
     this.botsTotal = 0;
 
     for (let ix = 0; ix < FieldCellsWidth; ++ix) {
       for (let iy = 0; iy < FieldCellsHeight; ++iy) {
-        tmpObj = this.allCells[ix][iy];
+        const tmpObj = this.allCells[ix][iy];
 
         if (tmpObj) {
           ++this.objectsTotal;
@@ -204,12 +202,12 @@ export class Field {
     return -3;
   }
 
-  moveObject2(obj: Object, toX: number, toY: number): number {
+  moveObject2(obj: ObjectClass, toX: number, toY: number): number {
     return this.moveObject(obj.x, obj.y, toX, toY);
   }
 
   // Add new object
-  addObject(obj: Object): boolean {
+  addObject(obj: ObjectClass): boolean {
     if (this.allCells[obj.x][obj.y]) {
       return false;
     }
@@ -245,11 +243,9 @@ export class Field {
     newColor: [number, number, number],
     differs: number = 1
   ): void {
-    let tmpObj: Object | null;
-
     for (let ix = 0; ix < FieldCellsWidth; ++ix) {
       for (let iy = 0; iy < FieldCellsHeight; ++iy) {
-        tmpObj = this.allCells[ix][iy];
+        const tmpObj = this.allCells[ix][iy];
 
         if (tmpObj && tmpObj instanceof Bot) {
           if (tmpObj.findKinship(b) >= NumberOfMutationMarkers - differs) {
@@ -262,319 +258,336 @@ export class Field {
 
   // Tick function for every object,
   // Returns true if object was destroyed
-  objectTick(tmpObj: Object): void {
+  objectTick(tmpObj: ObjectClass): void {
     const t = tmpObj.tick();
-    //console.log('t', t)
 
-    if (t === 1) {
-      // Object destroyed
-      if (tmpObj instanceof Bot) {
-        this.removeBot(tmpObj.x, tmpObj.y, tmpObj.getEnergy());
-      } else {
-        this.removeBot(tmpObj.x, tmpObj.y);
+    switch (t) {
+      case 2: {
+        return; // skip tick
       }
-      return;
-    } else if (t === 2) {
-      // Skip tick
-      return;
-    } else if (tmpObj instanceof Bot) {
-      // Object is a bot
-      const TEMP_x1 = tmpObj.x;
-      const tmpBot = tmpObj;
-      let tmpOut: BrainOutput;
-      const lookAt = tmpBot.getDirection();
-
-      // Fill brain input structure
-      const input = new BrainInput();
-
-      // Desired destination,
-      // that is what bot is looking at
-      let cx = tmpBot.x + lookAt.x;
-      let cy = tmpBot.y + lookAt.y;
-
-      cx = this.validateX(cx);
-
-      // If destination is out of bounds
-      if (!this.isInBounds(cx, cy)) {
-        // 1 if unpassable
-        input.vision = 1.0;
-      } else {
-        // Destination cell is empty
-        if (!this.allCells[cx][cy]) {
-          // 0 if empty
-          input.vision = 0.0;
+      case 1: {
+        // Object destroyed
+        if (tmpObj instanceof Bot) {
+          this.removeBot(tmpObj.x, tmpObj.y, tmpObj.getEnergy());
         } else {
-          // Destination not empty
-          switch (this.allCells[cx][cy]?.constructor) {
-            case Bot: {
-              // 0.5 if someone in that cell
-              input.vision = 0.5;
+          this.removeBot(tmpObj.x, tmpObj.y);
+        }
+        return;
+      }
+      default: {
+        switch (tmpObj.constructor) {
+          case Bot: {
+            // Object is a bot
+            const TEMP_x1 = tmpObj.x;
+            //const tmpBot = new Bot(tmpObj.x, tmpObj.y, (tmpObj as Bot).getEnergy(), tmpObj as Bot);
+            const tmpBot = tmpObj as Bot;
+            const lookAt = tmpBot.getDirection();
 
-              //Calculate how close they are as relatives, based on mutation markers
-              input.isRelative =
-                1.0 -
-                (this.allCells[cx][cy] as Bot).findKinship(tmpBot) /
-                  (NumberOfMutationMarkers * 1.0);
-              break;
-            }
-            case Rock: {
-              // 1.0 if cell is unpassable
+            // Fill brain input structure
+            const input = new BrainInput();
+
+            // Desired destination,
+            // that is what bot is looking at
+            let cx = tmpBot.x + lookAt.x;
+            let cy = tmpBot.y + lookAt.y;
+
+            cx = this.validateX(cx);
+
+            // If destination is out of bounds
+            if (!this.isInBounds(cx, cy)) {
+              // 1 if unpassable
               input.vision = 1.0;
-              break;
-            }
-            case Organics: {
-              // -.5 if cell contains organics
-              input.vision = -0.5;
-              break;
-            }
-            case Apple: {
-              // -1.0 if cell contains an apple
-              input.vision = -1.0;
-              break;
-            }
-          }
-        }
-      }
+            } else {
+              // Destination cell is empty
+              if (!this.allCells[cx][cy]) {
+                //console.log('input', input)
+                // 0 if empty
+                input.vision = 0.0;
+              } else {
+                // Destination not empty
+                switch (this.allCells[cx][cy]?.constructor) {
+                  case Bot: {
+                    // 0.5 if someone in that cell
+                    input.vision = 0.5;
 
-      // Bot brain does its stuff
-      tmpOut = tmpBot.think(input);
-
-      // Multiply first
-      for (let b = 0; b < tmpOut.divide; ++b) {
-        //Dies if energy is too low
-        if (tmpBot.getEnergy() <= EnergyPassedToAChild + GiveBirthCost) {
-          this.removeBot(tmpObj.x, tmpObj.y);
-          return;
-        } else {
-          // Gives birth otherwise
-          // Ignore all commented lines
-          //Point freeSpace = FindFreeNeighbourCell(tmpObj->x, tmpObj->y);
-          let freeSpace: Point;
-          //Point freeSpace = { tmpObj->x - 1, tmpObj->y };
-          //freeSpace.x = ValidateX(freeSpace.x);
-
-          //if(allCells[freeSpace.x][freeSpace.y] != NULL)
-          // freeSpace = FindFreeNeighbourCell(tmpObj->x, tmpObj->y);
-
-          //if ((tmpOut.divideDirX == 0) && (tmpOut.divideDirY == 0))
-          //{
-          freeSpace = this.findFreeNeighbourCell(tmpObj.x, tmpObj.y);
-
-          if (freeSpace.x !== -1) {
-            tmpBot.takeEnergy(EnergyPassedToAChild + GiveBirthCost);
-            this.addObject(
-              new Bot(
-                freeSpace.x,
-                freeSpace.y,
-                EnergyPassedToAChild,
-                tmpBot,
-                randomPercent(MutationChancePercent)
-              )
-            );
-            return;
-          }
-          /* }
-          else
-          {
-              //freeSpace = { tmpObj->x -1, tmpObj->y };
-
-              cx = tmpObj->x + tmpOut.divideDirX;
-              cy = tmpObj->y + tmpOut.divideDirY;
-
-              if (IsInBounds(cx, cy))
-              {
-                  if (allCells[cx][cy] == NULL)
-                  {
-                      tmpBot->TakeEnergy(EnergyPassedToAChild + GiveBirthCost);
-                      AddObject(new Bot(freeSpace.x, freeSpace.y, EnergyPassedToAChild, tmpBot, RandomPercent(MutationChancePercent)));
-                      return;
+                    // Calculate how close they are as relatives, based on mutation markers
+                    input.isRelative =
+                      1.0 -
+                      (this.allCells[cx][cy] as Bot).findKinship(tmpBot) /
+                        (NumberOfMutationMarkers * 1.0);
+                    break;
                   }
-              }
-          }*/
-        }
-      }
-
-      // Then attack
-      if (tmpOut.attack) {
-        // If dies of low energy
-        if (tmpBot.takeEnergy(AttackCost)) {
-          this.removeBot(tmpObj.x, tmpObj.y);
-          return;
-        } else {
-          // Get direction of attack
-          const dir = tmpBot.getDirection();
-
-          cx = this.validateX(tmpBot.x + dir.x);
-          cy = tmpBot.y + dir.y;
-
-          if (this.isInBounds(cx, cy)) {
-            // If there is an object
-            if (this.allCells[cx][cy]) {
-              if (this.allCells[cx][cy] instanceof Bot) {
-                // New rule: attack only from behind
-                /*int diff = tmpBot->GetRotationVal() - ((Bot*)allCells[cx][cy])->GetRotationVal();
-
-                diff = abs(diff);
-
-                if ((diff <= 1) || (diff >= 6))
-                {*/
-                // Kill an object
-                tmpBot.giveEnergy(
-                  (this.allCells[cx][cy] as Bot).getEnergy(),
-                  EnergySource.kills
-                );
-                this.removeBot(cx, cy);
-
-                tmpBot.numAttacks++;
-                //}
-              } else if (this.allCells[cx][cy] instanceof Organics) {
-                // Eat organics
-                tmpBot.giveEnergy(
-                  (this.allCells[cx][cy] as Organics).energy,
-                  EnergySource.ORGANICS
-                );
-                this.removeObject(cx, cy);
-              } else if (this.allCells[cx][cy] instanceof Apple) {
-                // Eat apple
-                tmpBot.giveEnergy(
-                  (this.allCells[cx][cy] as Apple).energy,
-                  EnergySource.ORGANICS
-                );
-                this.removeObject(cx, cy);
-              } else if (
-                RockCanBeEaten &&
-                this.allCells[cx][cy] instanceof Rock
-              ) {
-                // Eat rock
-                this.removeObject(cx, cy);
-              }
-            }
-          }
-        }
-      } else {
-        /*else if(tmpOut.eatOrganicWaste)
-      {
-          //Now eat organics
-          //Get direction
-          Point dir = tmpBot->GetDirection();
-
-          cx = ValidateX(tmpBot->x + dir.x);
-          cy = tmpBot->y + dir.y;
-
-          if (IsInBounds(cx, cy))
-          {
-              //If there is an object
-              if (allCells[cx][cy])
-              {
-                  if (allCells[cx][cy]->type == organic_waste)
-                  {
-                      //Eat organics
-                      tmpBot->GiveEnergy(((Organics*)allCells[cx][cy])->energy, organics);
-                      RemoveObject(cx, cy);
+                  case Rock: {
+                    // 1.0 if cell is unpassable
+                    input.vision = 1.0;
+                    break;
                   }
-              }
-          }
-      }*/
-        // Rotate after
-        if (tmpOut.rotate !== 0.0) {
-          // If dies of low energy
-          if (tmpBot.takeEnergy(RotateCost)) {
-            this.removeBot(tmpObj.x, tmpObj.y);
-            return;
-          }
-
-          tmpBot.rotate(tmpOut.rotate);
-        }
-
-        // Move
-        if (tmpOut.move) {
-          if (tmpBot.takeEnergy(MoveCost)) {
-            this.removeBot(tmpObj.x, tmpObj.y);
-            return;
-          }
-
-          const dir = tmpBot.getDirection();
-
-          cx = tmpBot.x + dir.x;
-          cy = tmpBot.y + dir.y;
-
-          cx = this.validateX(cx);
-
-          // Place object in a new place
-          if (this.moveObject2(tmpBot, cx, cy) === 0) {
-            ++tmpBot.numMoves;
-          }
-        }
-        // Photosynthesis
-        else if (tmpOut.photosynthesis) {
-          if (NoPhotosynthesis) {
-            return;
-          }
-
-          // If not in ocean
-          // if (tmpBot->y < FieldCellsHeight - OceanHeight)
-          if (tmpBot.y < FieldCellsHeight - Bot.adaptationStep5) {
-            let toGive: number;
-
-            // Give energy depending on a season
-            switch (season) {
-              case Season.SUMMER: {
-                if (UseSeasons) {
-                  toGive = PhotosynthesisReward_Summer;
-                } else {
-                  toGive = this.foodBase;
-
-                  // toGive = this.findHowManyFreeCellsAround(tmpBot.x, tmpBot.y) - 3;
-                  // if (toGive < 0) toGive = 0;
+                  case Organics: {
+                    // -.5 if cell contains organics
+                    input.vision = -0.5;
+                    break;
+                  }
+                  case Apple: {
+                    // -1.0 if cell contains an apple
+                    input.vision = -1.0;
+                    break;
+                  }
                 }
-                break;
-              }
-              case Season.AUTUMN:
-              case Season.SPRING: {
-                toGive = PhotosynthesisReward_Autumn;
-                break;
-              }
-              case Season.WINTER: {
-                //toGive = (ticknum%4 == 0)?PhotosynthesisReward/8:0;
-                toGive = PhotosynthesisReward_Winter;
-                //toGive = (ticknum % 5 == 0) ? 2 : 1;
-                break;
               }
             }
 
-            tmpBot.giveEnergy(toGive, EnergySource.PS);
-          } else {
-            // tmpBot->GiveEnergy(foodBase/2, PS);
-            if (
-              !NoPhotosyntesisInOcean &&
-              randomPercentX10(Bot.adaptationStep4)
-            ) {
-              tmpBot.giveEnergy(this.foodBase, EnergySource.PS);
+            // Bot brain does its stuff
+            const tmpOut = tmpBot.think(input);
+            console.log({
+              attack: tmpOut.attack,
+              divide: tmpOut.divide,
+              rotate: tmpOut.rotate,
+              move: tmpOut.move,
+              photosynthesis: tmpOut.photosynthesis,
+            });
+
+            // Multiply first
+            for (let b = 0; b < tmpOut.divide + 1; ++b) {
+              // Dies if energy is too low
+              if (tmpBot.getEnergy() <= EnergyPassedToAChild + GiveBirthCost) {
+                this.removeBot(tmpObj.x, tmpObj.y);
+                return;
+              } else {
+                // Gives birth otherwise
+                // Ignore all commented lines
+                //Point freeSpace = FindFreeNeighbourCell(tmpObj->x, tmpObj->y);
+                //Point freeSpace = { tmpObj->x - 1, tmpObj->y };
+                //freeSpace.x = ValidateX(freeSpace.x);
+
+                //if(allCells[freeSpace.x][freeSpace.y] != NULL)
+                // freeSpace = FindFreeNeighbourCell(tmpObj->x, tmpObj->y);
+
+                //if ((tmpOut.divideDirX == 0) && (tmpOut.divideDirY == 0))
+                //{
+                const freeSpace = this.findFreeNeighbourCell(tmpObj.x, tmpObj.y);
+
+                if (freeSpace.x !== -1) {
+                  tmpBot.takeEnergy(EnergyPassedToAChild + GiveBirthCost);
+                  this.addObject(
+                    new Bot(
+                      freeSpace.x,
+                      freeSpace.y,
+                      EnergyPassedToAChild,
+                      tmpBot,
+                      randomPercent(MutationChancePercent)
+                    )
+                  );
+                  return;
+                }
+                /* }
+                else
+                {
+                    //freeSpace = { tmpObj->x -1, tmpObj->y };
+      
+                    cx = tmpObj->x + tmpOut.divideDirX;
+                    cy = tmpObj->y + tmpOut.divideDirY;
+      
+                    if (IsInBounds(cx, cy))
+                    {
+                        if (allCells[cx][cy] == NULL)
+                        {
+                            tmpBot->TakeEnergy(EnergyPassedToAChild + GiveBirthCost);
+                            AddObject(new Bot(freeSpace.x, freeSpace.y, EnergyPassedToAChild, tmpBot, RandomPercent(MutationChancePercent)));
+                            return;
+                        }
+                    }
+                }*/
+              }
             }
+
+            // Then attack
+            if (tmpOut.attack) {
+              // If dies of low energy
+              if (tmpBot.takeEnergy(AttackCost)) {
+                this.removeBot(tmpObj.x, tmpObj.y);
+                return;
+              } else {
+                // Get direction of attack
+                const dir = tmpBot.getDirection();
+
+                cx = this.validateX(tmpBot.x + dir.x);
+                cy = tmpBot.y + dir.y;
+
+                if (this.isInBounds(cx, cy)) {
+                  // If there is an object
+                  if (this.allCells[cx][cy]) {
+                    if (this.allCells[cx][cy] instanceof Bot) {
+                      // New rule: attack only from behind
+                      /*int diff = tmpBot->GetRotationVal() - ((Bot*)allCells[cx][cy])->GetRotationVal();
+      
+                      diff = abs(diff);
+      
+                      if ((diff <= 1) || (diff >= 6))
+                      {*/
+                      // Kill an object
+                      tmpBot.giveEnergy(
+                        (this.allCells[cx][cy] as Bot).getEnergy(),
+                        EnergySource.kills
+                      );
+                      this.removeBot(cx, cy);
+
+                      tmpBot.numAttacks++;
+                      //}
+                    } else if (this.allCells[cx][cy] instanceof Organics) {
+                      // Eat organics
+                      tmpBot.giveEnergy(
+                        (this.allCells[cx][cy] as Organics).energy,
+                        EnergySource.ORGANICS
+                      );
+                      this.removeObject(cx, cy);
+                    } else if (this.allCells[cx][cy] instanceof Apple) {
+                      // Eat apple
+                      tmpBot.giveEnergy(
+                        (this.allCells[cx][cy] as Apple).energy,
+                        EnergySource.ORGANICS
+                      );
+                      this.removeObject(cx, cy);
+                    } else if (
+                      RockCanBeEaten &&
+                      this.allCells[cx][cy] instanceof Rock
+                    ) {
+                      // Eat rock
+                      this.removeObject(cx, cy);
+                    }
+                  }
+                }
+              }
+            } else {
+              /*else if(tmpOut.eatOrganicWaste)
+            {
+                //Now eat organics
+                //Get direction
+                Point dir = tmpBot->GetDirection();
+      
+                cx = ValidateX(tmpBot->x + dir.x);
+                cy = tmpBot->y + dir.y;
+      
+                if (IsInBounds(cx, cy))
+                {
+                    //If there is an object
+                    if (allCells[cx][cy])
+                    {
+                        if (allCells[cx][cy]->type == organic_waste)
+                        {
+                            //Eat organics
+                            tmpBot->GiveEnergy(((Organics*)allCells[cx][cy])->energy, organics);
+                            RemoveObject(cx, cy);
+                        }
+                    }
+                }
+            }*/
+              // Rotate after
+              if (tmpOut.rotate !== 0.0) {
+                // If dies of low energy
+                if (tmpBot.takeEnergy(RotateCost)) {
+                  this.removeBot(tmpObj.x, tmpObj.y);
+                  return;
+                }
+
+                tmpBot.rotate(tmpOut.rotate);
+              }
+
+              // Move
+              if (tmpOut.move) {
+                if (tmpBot.takeEnergy(MoveCost)) {
+                  this.removeBot(tmpObj.x, tmpObj.y);
+                  return;
+                }
+
+                const dir = tmpBot.getDirection();
+
+                cx = tmpBot.x + dir.x;
+                cy = tmpBot.y + dir.y;
+
+                cx = this.validateX(cx);
+
+                // Place object in a new place
+                if (this.moveObject2(tmpBot, cx, cy) === 0) {
+                  ++tmpBot.numMoves;
+                }
+              }
+              // Photosynthesis
+              else if (tmpOut.photosynthesis) {
+                if (NoPhotosynthesis) {
+                  return;
+                }
+
+                // If not in ocean
+                // if (tmpBot->y < FieldCellsHeight - OceanHeight)
+                if (tmpBot.y < FieldCellsHeight - Bot.adaptationStep5) {
+                  let toGive: number;
+
+                  // Give energy depending on a season
+                  switch (season) {
+                    case Season.AUTUMN:
+                    case Season.SPRING: {
+                      toGive = PhotosynthesisReward_Autumn;
+                      break;
+                    }
+                    case Season.WINTER: {
+                      //toGive = (ticknum%4 == 0)?PhotosynthesisReward/8:0;
+                      toGive = PhotosynthesisReward_Winter;
+                      //toGive = (ticknum % 5 == 0) ? 2 : 1;
+                      break;
+                    }
+                    case Season.SUMMER:
+                    default: {
+                      if (UseSeasons) {
+                        toGive = PhotosynthesisReward_Summer;
+                      } else {
+                        toGive = this.foodBase;
+
+                        // toGive = this.findHowManyFreeCellsAround(tmpBot.x, tmpBot.y) - 3;
+                        // if (toGive < 0) toGive = 0;
+                      }
+                      break;
+                    }
+                  }
+
+                  tmpBot.giveEnergy(toGive, EnergySource.PS);
+                } else {
+                  // tmpBot->GiveEnergy(foodBase/2, PS);
+                  if (
+                    !NoPhotosyntesisInOcean &&
+                    randomPercentX10(Bot.adaptationStep4)
+                  ) {
+                    tmpBot.giveEnergy(this.foodBase, EnergySource.PS);
+                  }
+                }
+              }
+            }
+            break;
           }
-        }
-      }
-    } else if (tmpObj instanceof Organics) {
-      // Organic waste should fall until it hits an obstacle
-      const tmpOrg = { ...tmpObj };
+          case Organics: {
+            // Organic waste should fall until it hits an obstacle
+            const tmpOrg = { ...tmpObj } as Organics;
 
-      const x = tmpOrg.x;
-      const y = tmpOrg.y + 1;
+            const x = tmpOrg.x;
+            const y = tmpOrg.y + 1;
 
-      // If not done falling
-      if (!tmpOrg.doneFalling) {
-        // What is underneath?
-        if (this.isInBounds(x, y)) {
-          if (!this.allCells[x][y]) {
-            // Fall
-            this.moveObject2(tmpOrg as Organics, x, y);
-          } else {
-            if (!OrganicWasteAlwaysFalls) {
-              tmpOrg.doneFalling = true;
+            // If not done falling
+            if (!tmpOrg.doneFalling) {
+              // What is underneath?
+              if (this.isInBounds(x, y)) {
+                if (!this.allCells[x][y]) {
+                  // Fall
+                  this.moveObject2(tmpOrg as Organics, x, y);
+                } else {
+                  if (!OrganicWasteAlwaysFalls) {
+                    tmpOrg.doneFalling = true;
+                  }
+                }
+              } else {
+                tmpOrg.doneFalling = true; // once done it shouldn't fall anymore
+              }
             }
+            break;
           }
-        } else {
-          tmpOrg.doneFalling = true; // once done it shouldn't fall anymore
         }
       }
     }
@@ -582,7 +595,7 @@ export class Field {
 
   // Tick function
   tick(thisFrame: number): void {
-    Object.CurrentFrame = thisFrame;
+    ObjectClass.CurrentFrame = thisFrame;
 
     if (UseApples) {
       if (this.spawnApplesInterval++ === AppleSpawnInterval) {
@@ -614,9 +627,9 @@ export class Field {
   validateX(X: number): number {
     if (TileWorldHorizontally) {
       if (X < 0) {
-        return (X % FieldCellsWidth) + FieldCellsWidth;
+        return Math.floor((X % FieldCellsWidth) + FieldCellsWidth);
       } else if (X >= FieldCellsWidth) {
-        return X % FieldCellsWidth;
+        return Math.floor(X % FieldCellsWidth);
       }
     }
 
@@ -637,16 +650,16 @@ export class Field {
     X /= FieldCellSize;
     Y /= FieldCellSize;
 
-    return new Point(X, Y);
+    return new Point(Math.floor(X), Math.floor(Y));
   }
 
-  //Get object at certain point on field
-  getObjectLocalCoords(X: number, Y: number): Object | null {
+  // Get object at certain point on field
+  getObjectLocalCoords(X: number, Y: number): ObjectClass | null {
     return this.allCells[X][Y];
   }
 
   // Validates if object exists
-  validateObjectExistence(obj: Object): boolean {
+  validateObjectExistence(obj: ObjectClass): boolean {
     for (let ix = 0; ix < FieldCellsWidth; ++ix) {
       for (let iy = 0; iy < FieldCellsHeight; ++iy) {
         if (this.allCells[ix][iy] === obj) {
@@ -658,7 +671,7 @@ export class Field {
     return false;
   }
 
-  //How many objects on field, last frame
+  // How many objects on field, last frame
   getNumObjects(): number {
     return this.objectsTotal;
   }
@@ -697,11 +710,9 @@ export class Field {
 
   // Spawn apples
   spawnApples(): void {
-    let tmpObj: Object | null;
-
     for (let ix = 0; ix < FieldCellsWidth; ++ix) {
       for (let iy = 0; iy < FieldCellsHeight; ++iy) {
-        tmpObj = this.allCells[ix][iy];
+        const tmpObj = this.allCells[ix][iy];
 
         if (!tmpObj) {
           //Take a chance to spawn an apple

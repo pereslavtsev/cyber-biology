@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import {Container, Stage, useApp, useTick} from "@inlet/react-pixi";
+import { Container, Stage, useApp, useTick } from "@inlet/react-pixi";
 import { Field, RenderTypes } from "./api-legacy/field";
 import {
   FieldBackgroundColor,
@@ -21,6 +21,8 @@ import Color from "color";
 import { Bot } from "./api-legacy/bot";
 import { Rectangle } from "./components/Rectangle";
 import { BotCell } from "./components/BotCell";
+import { Apple } from "./api-legacy/apple";
+import { AppleCell } from "./components/AppleCell";
 
 const field = new Field();
 
@@ -76,8 +78,11 @@ const FieldContainer: FC<FieldContainerProps> = ({ render }) => {
         }
         switch (obj.constructor) {
           case Bot: {
-            console.log(obj);
+            //console.log(obj);
             return <BotCell key={index} object={obj as Bot} />;
+          }
+          case Apple: {
+            return <AppleCell key={index} x={obj.x * FieldCellSize} y={obj.y * FieldCellSize} />;
           }
           default: {
             return null;
