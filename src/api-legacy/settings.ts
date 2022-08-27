@@ -83,10 +83,10 @@ export const TileWorldHorizontally = true;
 
 //-----------------------------------------------------------------
 // Drawing
-// #define DrawBotOutline
-// #define DrawBotHead
+export const DrawBotOutline = true;
+export const DrawBotHead = true;
 
-// #define BotOutlineColor 111,111,111,255
+export const BotOutlineColor = [111, 111, 111, 255]; // Blue water
 
 // #define RockDrawColor 62, 62, 62, 255
 // #define OrganicWateDrawColor 200, 200, 200, 255

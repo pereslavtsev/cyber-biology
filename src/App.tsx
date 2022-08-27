@@ -1,5 +1,5 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
-import { Container, Graphics, Stage } from "@inlet/react-pixi";
+import React, { FC, useEffect, useState } from "react";
+import {Container, Stage, useApp, useTick} from "@inlet/react-pixi";
 import { Field, RenderTypes } from "./api-legacy/field";
 import {
   FieldBackgroundColor,
@@ -19,8 +19,8 @@ import {
 } from "./api-legacy/settings";
 import Color from "color";
 import { Bot } from "./api-legacy/bot";
-import { Rectangle, RectangleProps } from "./components/Rectangle";
-import { Object } from "./api-legacy/object";
+import { Rectangle } from "./components/Rectangle";
+import { BotCell } from "./components/BotCell";
 
 const field = new Field();
 
@@ -54,35 +54,17 @@ interface FieldContainerProps {
   readonly render: RenderTypes;
 }
 
-interface ObjectContainerProps<T extends Object = Object>
-  extends Partial<Pick<RectangleProps, "color">> {
-  readonly object: T;
-}
-
-const ObjectContainer: FC<ObjectContainerProps> = (props) => {
-  const { object, color = Color([255, 0, 0, 111]).rgbNumber() } = props;
-  return (
-    <Rectangle
-      x={object.x * FieldCellSize}
-      y={object.y * FieldCellSize}
-      width={FieldCellSize}
-      height={FieldCellSize}
-      color={color}
-    />
-  );
-};
-
-const BotContainer: FC<ObjectContainerProps<Bot>> = (props) => {
-  const { object } = props;
-  return (
-    <ObjectContainer
-      color={Color([...object.color, 255]).rgbNumber()}
-      object={object}
-    />
-  );
-};
-
 const FieldContainer: FC<FieldContainerProps> = ({ render }) => {
+  const [frame, setFrame] = useState(0);
+  const app = useApp();
+  useTick(() => {
+    setFrame(frame + 1);
+  });
+  useEffect(() => {
+    field.tick(frame);
+    app.render();
+  }, [app, frame]);
+
   return (
     <Container x={FieldX} y={FieldY}>
       <MainRect />
@@ -95,9 +77,7 @@ const FieldContainer: FC<FieldContainerProps> = ({ render }) => {
         switch (obj.constructor) {
           case Bot: {
             console.log(obj);
-            return (
-              <BotContainer key={index} object={obj as Bot}></BotContainer>
-            );
+            return <BotCell key={index} object={obj as Bot} />;
           }
           default: {
             return null;
@@ -109,13 +89,8 @@ const FieldContainer: FC<FieldContainerProps> = ({ render }) => {
 };
 
 const App: FC = () => {
-  const [frame, setFrame] = useState(0);
-  useEffect(() => {
-    field.tick(frame);
-  }, [frame]);
   return (
     <>
-      <button onClick={() => setFrame(frame + 1)}>hghfghg</button>
       <Stage width={WindowWidth} height={WindowHeight}>
         <FieldContainer render={RenderTypes.NATURAL} />
       </Stage>

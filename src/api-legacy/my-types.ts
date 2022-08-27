@@ -20,7 +20,7 @@ export class Point {
  * @deprecated
  */
 export function randomVal(max: number): number {
-  return Math.round(Math.random() * max);
+  return Math.floor(Math.random() * max);
 }
 
 /**
@@ -28,7 +28,7 @@ export function randomVal(max: number): number {
  * @deprecated
  */
 export function randomPercent(val: number): boolean {
-  return Math.random() * 1000 >= 1000 - val * 10;
+  return Math.floor(Math.random() * 1000) >= 1000 - val * 10;
 }
 
 /**
@@ -36,7 +36,7 @@ export function randomPercent(val: number): boolean {
  * @deprecated
  */
 export function randomPercentX10(val: number): boolean {
-  return Math.random() * 1000 >= 1000 - val;
+  return Math.floor(Math.random() * 1000) >= 1000 - val;
 }
 
 /**

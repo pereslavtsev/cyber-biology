@@ -37,7 +37,7 @@ import { Object, ObjectTypes } from "./object";
 /**
  * @deprecated
  */
-const Rotations: Point[] = [
+export const Rotations: Point[] = [
   new Point(0, -1),
   new Point(1, -1),
   new Point(1, 0),

@@ -170,6 +170,8 @@ export class BotNeuralNet {
           }
         }
 
+
+
         for (let i = 0; i < n.numConnections; ++i) {
           this.allValues[xi + 1][n.allConnections[i].num] +=
             value * n.allConnections[i].weight;

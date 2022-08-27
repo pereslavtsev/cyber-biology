@@ -264,7 +264,7 @@ export class Field {
   // Returns true if object was destroyed
   objectTick(tmpObj: Object): void {
     const t = tmpObj.tick();
-    console.log('t', t)
+    //console.log('t', t)
 
     if (t === 1) {
       // Object destroyed

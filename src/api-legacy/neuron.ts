@@ -33,12 +33,15 @@ export class Neuron {
 
   bias: number = 0.0;
 
-  numConnections: number = 0;
   allConnections: NeuronConnection[] = [];
+
+  get numConnections() {
+    return this.allConnections.length;
+  }
 
   // Self-explanatory
   addConnection(NUM: number, WEIGHT: number): void {
-    this.allConnections[this.numConnections++] = { num: NUM, weight: WEIGHT };
+    this.allConnections.push({ num: NUM, weight: WEIGHT });
   }
 
   // Sort connections by index
@@ -115,7 +118,7 @@ export class Neuron {
 
   // Zero connections
   clearConnections(): void {
-    this.numConnections = 0;
+    this.allConnections = [];
   }
   // Zero bias and connections
   setZero(): void {
@@ -126,9 +129,7 @@ export class Neuron {
   // Tunnel neuron - one with no bias and only 1 connection to same neuron in next layer with weight = 1.0f
   setTunnel(num: number): void {
     this.bias = 0.0;
-    this.numConnections = 1;
-    this.allConnections[0].weight = 1.0;
-    this.allConnections[0].num = num;
+    this.allConnections = [{ num, weight: 1.0 }];
   }
 
   // Change neuron a little
