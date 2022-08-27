@@ -213,17 +213,14 @@ export class Field {
     }
 
     this.allCells[obj.x][obj.y] = obj;
+    console.log('obj', obj)
 
     return true;
   }
 
   // Remove object and delete object class
   removeObject(X: number, Y: number): void {
-    const tmpO = this.allCells[X][Y];
-
-    if (tmpO) {
-      delete this.allCells[X][Y];
-    }
+    this.allCells[X][Y] = null;
   }
 
   // Remove a bot (same as remove object but for a bot)
@@ -338,16 +335,16 @@ export class Field {
 
             // Bot brain does its stuff
             const tmpOut = tmpBot.think(input);
-            console.log({
-              attack: tmpOut.attack,
-              divide: tmpOut.divide,
-              rotate: tmpOut.rotate,
-              move: tmpOut.move,
-              photosynthesis: tmpOut.photosynthesis,
-            });
+            // console.log({
+            //   attack: tmpOut.attack,
+            //   divide: tmpOut.divide,
+            //   rotate: tmpOut.rotate,
+            //   move: tmpOut.move,
+            //   photosynthesis: tmpOut.photosynthesis,
+            // });
 
             // Multiply first
-            for (let b = 0; b < tmpOut.divide + 1; ++b) {
+            for (let b = 0; b < tmpOut.divide; ++b) {
               // Dies if energy is too low
               if (tmpBot.getEnergy() <= EnergyPassedToAChild + GiveBirthCost) {
                 this.removeBot(tmpObj.x, tmpObj.y);
@@ -364,19 +361,23 @@ export class Field {
 
                 //if ((tmpOut.divideDirX == 0) && (tmpOut.divideDirY == 0))
                 //{
-                const freeSpace = this.findFreeNeighbourCell(tmpObj.x, tmpObj.y);
+                const freeSpace = this.findFreeNeighbourCell(
+                  tmpObj.x,
+                  tmpObj.y
+                );
+
+                console.log('freeSpace', tmpBot.id, freeSpace)
 
                 if (freeSpace.x !== -1) {
                   tmpBot.takeEnergy(EnergyPassedToAChild + GiveBirthCost);
-                  this.addObject(
-                    new Bot(
-                      freeSpace.x,
-                      freeSpace.y,
-                      EnergyPassedToAChild,
-                      tmpBot,
-                      randomPercent(MutationChancePercent)
-                    )
+                  const newBot = new Bot(
+                    freeSpace.x,
+                    freeSpace.y,
+                    EnergyPassedToAChild,
+                    tmpBot,
+                    randomPercent(MutationChancePercent)
                   );
+                  this.addObject(newBot);
                   return;
                 }
                 /* }

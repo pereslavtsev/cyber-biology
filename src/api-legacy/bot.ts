@@ -333,7 +333,7 @@ export class Bot extends Object {
     // Compute
     this.brain.process();
     const toRet = this.brain.getOutput();
-    console.log('toRet', toRet)
+    //console.log('toRet', toRet)
 
     // Cannot multiply if not ready
     if (this.fertilityDelay) {
@@ -577,16 +577,16 @@ export class Bot extends Object {
 
     // Random direction
     this.randomDirection();
-    //
-    // // Now mutate
-    // if (!ForbidMutations && mutate) {
-    //   if (UseTotalMutation && randomPercentX10(TotalMutationChancePercentX10)) {
-    //     this.totalMutation();
-    //   } else {
-    //     this.mutate();
-    //   }
-    // }
-    //
+
+    // Now mutate
+    if (!ForbidMutations && mutate) {
+      if (UseTotalMutation && randomPercentX10(TotalMutationChancePercentX10)) {
+        this.totalMutation();
+      } else {
+        this.mutate();
+      }
+    }
+
     this.adaptation_lastX = X;
   }
 

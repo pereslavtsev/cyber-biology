@@ -111,7 +111,7 @@ export class BotNeuralNet {
     this.clearMemory();
 
     if (prototype) {
-      this.allNeurons = [...prototype.allNeurons];
+      this.allNeurons = prototype.allNeurons;
     }
   }
 
@@ -194,20 +194,19 @@ export class BotNeuralNet {
     // Output layer
 
     // Rotation
-    value = this.allValues[NeuronOutputLayerIndex][0];
     n = this.allNeurons[NeuronOutputLayerIndex][0];
 
-    value = this.plusMinusActivation(value + n.bias);
+    value = this.plusMinusActivation(this.allValues[NeuronOutputLayerIndex][0] + n.bias);
 
     // All the rest
     for (let oi = 1; oi < NeuronsInLayer; ++oi) {
       value = this.allValues[NeuronOutputLayerIndex][oi];
       n = this.allNeurons[NeuronOutputLayerIndex][oi];
 
-      value = this.activation(value + n.bias);
+      value = this.activation(this.allValues[NeuronOutputLayerIndex][oi] + n.bias);
     }
 
-    console.log('this.allNeurons[NeuronOutputLayerIndex]', this.allValues[NeuronOutputLayerIndex])
+    //console.log('this.allNeurons[NeuronOutputLayerIndex]', this.allValues[NeuronOutputLayerIndex])
   }
 
   /**

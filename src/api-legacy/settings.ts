@@ -128,7 +128,7 @@ export const EveryTickEnergyPenalty = 0;
 export const AttackCost = 4;
 export const MoveCost = 1;
 export const RotateCost = 0;
-export const GiveBirthCost = 10;
+export const GiveBirthCost = 10; // TODO: 10
 
 // How many turns creature cannot act after his birth
 export const StunAfterBirth = 1;

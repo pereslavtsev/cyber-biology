@@ -68,7 +68,15 @@ const FieldContainer: FC<FieldContainerProps> = ({ render }) => {
   }, [app, frame]);
 
   return (
-    <Container x={FieldX} y={FieldY}>
+    <Container
+      x={FieldX}
+      y={FieldY}
+      interactive={true}
+      pointerdown={() => {
+        // setFrame(frame + 1);
+        // app.render();
+      }}
+    >
       <MainRect />
       {DrawOcean && <OceanRect />}
       {DrawMudLayer && <MudLayerRect />}
@@ -82,7 +90,13 @@ const FieldContainer: FC<FieldContainerProps> = ({ render }) => {
             return <BotCell key={index} object={obj as Bot} />;
           }
           case Apple: {
-            return <AppleCell key={index} x={obj.x * FieldCellSize} y={obj.y * FieldCellSize} />;
+            return (
+              <AppleCell
+                key={index}
+                x={obj.x * FieldCellSize}
+                y={obj.y * FieldCellSize}
+              />
+            );
           }
           default: {
             return null;
