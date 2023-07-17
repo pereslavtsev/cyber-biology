@@ -2,7 +2,7 @@
  * Organics class
  * @deprecated
  */
-import { Object, ObjectTypes } from "./object";
+import { Object, ObjectTypes } from "./object/classes/object.class";
 
 /**
  * Organics class

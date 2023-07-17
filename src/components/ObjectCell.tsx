@@ -1,7 +1,7 @@
 import Color from "color";
 import { Rectangle, RectangleProps } from "./Rectangle";
 import { FieldCellSize } from "../api-legacy/settings";
-import { Object } from "../api-legacy/object";
+import { Object } from "../api-legacy/object/classes/object.class";
 import { FC } from "react";
 
 export interface ObjectCellProps<T extends Object = Object>

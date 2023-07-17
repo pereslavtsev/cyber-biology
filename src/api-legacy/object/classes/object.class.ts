@@ -1,16 +1,5 @@
 import { nanoid } from "nanoid";
-
-/**
- * Object types
- * @deprecated
- */
-export enum ObjectTypes {
-  ABSTRACT,
-  BOT,
-  ROCK,
-  ORGANIC_WASTE,
-  APPLE,
-}
+import {ObjectTypes} from "../enums/object-types.enum";
 
 export abstract class Object {
   private lastTickFrame: number = 0;

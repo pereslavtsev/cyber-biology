@@ -1,14 +1,19 @@
-import type {NeuronConnection, NeuronType} from "./neuron";
+import type {NeuronType} from "../enums/neuron-type.enum";
+import type {NeuronConnection} from "../classes/neuron-connection.class";
 
 export interface INeuron {
   type: NeuronType;
+  layer: number;
+
   bias: number;
+
+  get numConnections(): number;
 
   allConnections: NeuronConnection[];
 
   clone(source: INeuron): void;
 
-  addConnection(DEST_LAYER: number, DEST: number, WEIGHT: number): void;
+  addConnection(DEST_LAYER: number, DEST: number, WEIGHT?: number): void;
   addConnection(prototype: NeuronConnection): void;
   addRandomConnection(): boolean;
   removeConnection(index: number): void;

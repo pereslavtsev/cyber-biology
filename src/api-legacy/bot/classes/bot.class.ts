@@ -1,14 +1,13 @@
 // Rotations array, contains where a bot would look with every
 // position of its head
-import { BotNeuralNet, BrainInput, BrainOutput } from "./bot-neural-net";
+import { BotNeuralNet } from "../../brain/bot-neural-net";
 import {
-  Point,
   rand,
   randomPercent,
   randomPercentX10,
   randomVal,
   repeat,
-} from "./my-types";
+} from "../../my-types";
 import {
   BotDiesIfEnergyOverflow,
   ChangeColorSlightly,
@@ -32,66 +31,16 @@ import {
   StunAfterBirth,
   TotalMutationChancePercentX10,
   UseTotalMutation,
-} from "./settings";
-import { Neuron, NeuronType } from "./neuron";
-import { Object, ObjectTypes } from "./object";
-
-/**
- * @deprecated
- */
-export const Rotations: Point[] = [
-  new Point(0, -1),
-  new Point(1, -1),
-  new Point(1, 0),
-  new Point(1, 1),
-  new Point(0, 1),
-  new Point(-1, 1),
-  new Point(-1, 0),
-  new Point(-1, -1),
-];
-
-export interface s_Color {
-  rgb: [number, number, number];
-}
-
-/**
- * @deprecated
- */
-export enum EnergySource {
-  PS,
-  kills,
-  ORGANICS,
-  unknown,
-}
-
-/**
- * Preset colors
- * @deprecated
- */
-const presetColors: [number, number, number][] = [
-  [255, 0, 0],
-  [0, 255, 0],
-  [0, 0, 255],
-  [223, 52, 210],
-  [200, 14, 84],
-  [60, 60, 163],
-  [160, 160, 200],
-  [0, 255, 255],
-  [100, 170, 170],
-  [80, 90, 90],
-  [70, 200, 160],
-  [0, 130, 86],
-  [0, 133, 0],
-  [140, 255, 0],
-  [136, 160, 103],
-  [200, 255, 0],
-  [160, 180, 100],
-  [255, 255, 0],
-  [255, 190, 0],
-  [170, 150, 85],
-  [255, 120, 0],
-  [240, 200, 200],
-];
+} from "../../settings";
+import { Neuron } from "../../neuron/classes/neuron.class";
+import { Object } from "../../object/classes/object.class";
+import {BrainInput} from "../../brain/brain-input.class";
+import {EnergySource} from "../enums/energy-source.enum";
+import {s_Color} from "../interfaces/s-color.interface";
+import {presetColors} from "../consts";
+import {BrainOutput} from "../../brain/brain-output.class";
+import {NeuronType} from "../../neuron/enums/neuron-type.enum";
+import {ObjectTypes} from "../../object/enums/object-types.enum";
 
 type summary_return = [
   simple: number,

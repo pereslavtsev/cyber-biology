@@ -1,21 +1,4 @@
 /**
- * @deprecated
- */
-export class Point {
-  constructor(public x = -1, public y = -1) {}
-
-  shift(X: number, Y: number): void {
-    this.x += X;
-    this.y += Y;
-  }
-
-  set(X: number, Y: number): void {
-    this.x = X;
-    this.y = Y;
-  }
-}
-
-/**
  * Get random number (0 to max - 1)
  * @deprecated
  */
@@ -37,6 +20,10 @@ export function randomPercent(val: number): boolean {
  */
 export function randomPercentX10(val: number): boolean {
   return Math.floor(Math.random() * 1000) >= 1000 - val;
+}
+
+export function randomValRange(min: number, max: number) {
+  return min + (rand() % (max - min));
 }
 
 /**

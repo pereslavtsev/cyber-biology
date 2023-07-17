@@ -1,4 +1,5 @@
-import { Object, ObjectTypes } from "./object";
+import { Object } from "./object/classes/object.class";
+import {ObjectTypes} from "./object/enums/object-types.enum";
 
 /**
  * Rock class

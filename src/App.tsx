@@ -18,7 +18,7 @@ import {
   DrawMudLayer,
 } from "./api-legacy/settings";
 import Color from "color";
-import { Bot } from "./api-legacy/bot";
+import { Bot } from "./api-legacy/bot/classes/bot.class";
 import { Rectangle } from "./components/Rectangle";
 import { BotCell } from "./components/BotCell";
 import { Apple } from "./api-legacy/apple";

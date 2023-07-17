@@ -1,4 +1,4 @@
-import { Bot, Rotations } from "../api-legacy/bot";
+import { Bot, Rotations } from "../api-legacy/bot/classes/bot.class";
 import * as PIXI from "pixi.js";
 import {
   BotOutlineColor,
