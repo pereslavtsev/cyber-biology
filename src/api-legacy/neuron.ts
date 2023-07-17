@@ -4,6 +4,7 @@ import {
   NeuronsInLayer,
   UseMemoryNeuron,
 } from "./settings";
+import {INeuron} from "./neuron.interface";
 
 /**
  * @deprecated
@@ -28,10 +29,14 @@ export enum NeuronType {
 /**
  * @deprecated
  */
-export class Neuron {
+export class Neuron implements INeuron {
+  constructor() {
+    this.setRandomType();
+  }
+
   type: NeuronType = NeuronType.BASIC;
 
-  bias: number = 0.0;
+  bias = 0.0;
 
   allConnections: NeuronConnection[] = [];
 
@@ -120,6 +125,11 @@ export class Neuron {
   clearConnections(): void {
     this.allConnections = [];
   }
+
+  isInactive(): boolean {
+    return !this.numConnections;
+  }
+
   // Zero bias and connections
   setZero(): void {
     this.clearConnections();
@@ -128,7 +138,7 @@ export class Neuron {
 
   // Tunnel neuron - one with no bias and only 1 connection to same neuron in next layer with weight = 1.0f
   setTunnel(num: number): void {
-    this.bias = 0.0;
+    this.setZero();
     this.allConnections = [{ num, weight: 1.0 }];
   }
 

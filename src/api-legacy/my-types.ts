@@ -28,7 +28,7 @@ export function randomVal(max: number): number {
  * @deprecated
  */
 export function randomPercent(val: number): boolean {
-  return Math.floor(Math.random() * 1000) >= 1000 - val * 10;
+  return randomVal(1000) >= 1000 - val * 10;
 }
 
 /**

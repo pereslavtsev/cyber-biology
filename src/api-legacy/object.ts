@@ -19,6 +19,8 @@ export abstract class Object {
   // Time in ticks since object was created
   protected lifetime: number = 0;
 
+  // abstract draw(): void;
+
   // Object type
   static readonly Type: ObjectTypes = ObjectTypes.ABSTRACT;
 

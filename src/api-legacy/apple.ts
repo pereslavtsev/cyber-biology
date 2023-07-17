@@ -15,11 +15,7 @@ export class Apple extends Object {
   static readonly Type = ObjectTypes.APPLE;
 
   // New apple
-  constructor(X: number, Y: number, public energy: number = 0) {
+  constructor(X: number, Y: number, public energy: number = DefaultAppleEnergy) {
     super(X, Y);
-
-    if (this.energy === 0) {
-      this.energy = DefaultAppleEnergy;
-    }
   }
 }
