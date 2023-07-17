@@ -37,33 +37,15 @@ import {
 import { Bot, EnergySource } from "./bot";
 import { Apple } from "./apple";
 import { Organics } from "./organics";
-import { BrainInput, BrainOutput } from "./bot-neural-net";
+import { BrainOutput } from "./bot-neural-net";
 import { Rock } from "./rock";
+import {Season} from "./field/enums/season";
+import {BrainInput} from "./brain/brain-input.class";
 
 /**
  * @deprecated
  */
 const NumThreads = 1;
-
-/**
- * @deprecated
- */
-export enum RenderTypes {
-  NATURAL,
-  PREDATORS,
-  ENERGY,
-  NO_RENDER,
-}
-
-/**
- * @deprecated
- */
-export enum Season {
-  SUMMER,
-  AUTUMN,
-  WINTER,
-  SPRING,
-}
 
 let season: Season;
 
@@ -384,10 +366,10 @@ export class Field {
                 else
                 {
                     //freeSpace = { tmpObj->x -1, tmpObj->y };
-      
+
                     cx = tmpObj->x + tmpOut.divideDirX;
                     cy = tmpObj->y + tmpOut.divideDirY;
-      
+
                     if (IsInBounds(cx, cy))
                     {
                         if (allCells[cx][cy] == NULL)
@@ -420,9 +402,9 @@ export class Field {
                     if (this.allCells[cx][cy] instanceof Bot) {
                       // New rule: attack only from behind
                       /*int diff = tmpBot->GetRotationVal() - ((Bot*)allCells[cx][cy])->GetRotationVal();
-      
+
                       diff = abs(diff);
-      
+
                       if ((diff <= 1) || (diff >= 6))
                       {*/
                       // Kill an object
@@ -464,10 +446,10 @@ export class Field {
                 //Now eat organics
                 //Get direction
                 Point dir = tmpBot->GetDirection();
-      
+
                 cx = ValidateX(tmpBot->x + dir.x);
                 cy = tmpBot->y + dir.y;
-      
+
                 if (IsInBounds(cx, cy))
                 {
                     //If there is an object
@@ -686,7 +668,7 @@ export class Field {
   TODO!!!
   File format:
   4b - 0xfafa458e (magic number)
-  4b - creature type 
+  4b - creature type
   4b - uint num layers
   4b - uint neurons in layer
   4b - sizeof (Neuron)
