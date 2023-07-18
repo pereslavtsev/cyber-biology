@@ -3,18 +3,19 @@
 export const DrawBotOutline = true;
 export const DrawBotHead = true;
 
-export const BotOutlineColor = [111, 111, 111, 255]; // Blue water
+export const BotOutlineColor = [111, 111, 111, 255];
 
-// #define RockDrawColor 62, 62, 62, 255
-// #define OrganicWateDrawColor 200, 200, 200, 255
-export const AppleDrawColor = [0, 100, 0, 255];
+export const FieldBackgroundColor = [255, 255, 255, 255];
 
-export const DrawOcean = true;
+export const RockDrawColor = 0x626262ff;
+export const OrganicWasteDrawColor = 0xc8c8c8ff;
+export const OrganicWasteOutlineColor = 0x808080ff;
+export const AppleDrawColorRGBA = 0x006400ff;
+
 export const OceanColor = [150, 150, 255, 255]; // Blue water
 // export const OceanColor = [100, 255, 100, 255]; // Green water
-
-export const DrawMudLayer = true;
 export const MudColor = [140, 80, 62, 255];
 
-// #define RenderTypeAtStart predators
+export const DrawUnderwaterMask = true;
+export const UnderwaterMaskColor = [100, 100, 255, 80];
 //-----------------------------------------------------------------

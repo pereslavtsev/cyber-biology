@@ -1,10 +1,10 @@
-import type {Season, RenderTypes} from "../enums";
-import {IPoint} from "pixi.js";
-import type {IObject} from "../../object/interface/object.interface";
+import type { Season, RenderTypes } from '../enums';
+import { IPoint } from 'pixi.js';
+import type { IObject } from '../../object';
+import type { IColor } from '../../utils';
 
-export interface IField
-{
-// private:
+export interface IField {
+  // private:
 
   // All cells as 2d array
   allCells: IObject[][];
@@ -18,14 +18,13 @@ export interface IField
   // SDL_Rect mudLayerRect = { FieldX , FieldY + (FieldHeight - (InitialMudLayerHeight * FieldCellSize)),
   // FieldWidth, InitialMudLayerHeight * FieldCellSize };
 
-
   // Needed to calculate number of active objects (calculated on every frame)
   objectsTotal: uint;
   botsTotal: uint;
-  applesTotal : uint;
-  organicsTotal : uint;
+  applesTotal: uint;
+  organicsTotal: uint;
   predatorsTotal: uint;
-  averageLifetime : uint;
+  averageLifetime: uint;
 
   spawnApplesCounter: uint;
 
@@ -48,13 +47,12 @@ export interface IField
   tick_multiple_threads(): void;
 
   // Process function for multithreading simulation
-  processPart_MultipleThreads(X1: uint, X2: uint, index: uint): void
+  processPart_MultipleThreads(X1: uint, X2: uint, index: uint): void;
 
   // Tick function for every object
   objectTick(tmpObj: IObject): void;
 
-
-// public:
+  // public:
 
   params: FieldDynamicParams;
 
@@ -94,7 +92,7 @@ export interface IField
   isInMud(Y: int): bool;
 
   // Find empty cell nearby, otherwise return {-1, -1}
-  findFreeNeighbourCell( X: int, Y: int): IPoint;
+  findFreeNeighbourCell(X: int, Y: int): IPoint;
   findRandomNeighbourBot(X: int, Y: int): IPoint;
 
   // How may free cells are available around a given one

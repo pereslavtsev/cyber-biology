@@ -1,3 +1,5 @@
+import {Vector} from "tstl";
+
 export interface ParameterSweep
 {
 // private:
@@ -5,7 +7,7 @@ export interface ParameterSweep
   currentTick: uint;
   beginTick: uint;
 
-  int* toSweep = NULL;
+  toSweep: int;
 
   sweepIncrement: int;
   sweepGoal: int;
@@ -13,7 +15,7 @@ export interface ParameterSweep
   addToChartRate: uint;
   chartValPrev: uint;
 
-  AddToChart(): void;
+  addToChart(): void;
 
 // public:
 
@@ -27,5 +29,5 @@ export interface ParameterSweep
    Clear(): void;
 
 
-  vector<uint>* history;
+  history: Vector<uint>;
 }

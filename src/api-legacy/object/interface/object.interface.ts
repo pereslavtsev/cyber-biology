@@ -1,7 +1,7 @@
-import {ObjectTypes} from "../enums/object-types.enum";
+import { ObjectTypes } from '../enums';
+import { IField } from '../../field/interfaces/field.interface';
 
-export interface IObject
-{
+export interface IObject {
   // private:
 
   // Prev. tick frame number
@@ -13,15 +13,15 @@ export interface IObject
 
   // protected:
 
-    //X coordinate, corrected with Field::RenderX
+  //X coordinate, corrected with Field::RenderX
   screenX: int;
 
-   calcScreenX(): void;
-   calcObjectRect(): void;
-   calcObjectRectShrinked(shrink: int): void;
+  calcScreenX(): void;
+  calcObjectRect(): void;
+  calcObjectRectShrinked(shrink: int): void;
 
   //Time in ticks since object was created
-   lifetime: uint;
+  lifetime: uint;
 
   //Used for drawing
   // object_rect: SDL_Rect;
@@ -31,17 +31,16 @@ export interface IObject
   // Field* pField;
   // FieldDynamicParams* pParams;
 
-
   // public:
 
-  x: int, y: int;
+  x: int;
+  y: int;
 
   //If an object stores energy it's here
   energy: int;
 
   type(): ObjectTypes;
   image_sensor_val(): float;
-
 
   // Basic 'dummy' draw functions if needed
   draw(): void;
@@ -60,12 +59,11 @@ export interface IObject
   getLifetime(): uint;
   setLifetime(uint: uint): void;
 
-
   CurrentFrame: uint;
   SetPointers(field: IField, cells: IObject): void;
 
   // protected:
 
-    //Texture rectangle
-    //  image_rect: Rect;
+  //Texture rectangle
+  //  image_rect: Rect;
 }

@@ -1,9 +1,5 @@
-/**
- * Organics class
- * @deprecated
- */
-import { Object, ObjectTypes } from "../../object";
-import {IOrganics} from "../interfaces/organics.interface";
+import { Object, ObjectTypes } from '../../object';
+import { IOrganics } from '../interfaces';
 
 /**
  * Organics class

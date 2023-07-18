@@ -1,6 +1,6 @@
 // Don't touch
-import { Object as ObjectClass } from "../../object/classes/object.class";
-import { randomPercent, randomPercentX10, randomVal } from "../../my-types";
+import { Object as ObjectClass } from '../../object/classes/object.class';
+import { randomPercent, randomPercentX10, randomVal } from '../../my-types';
 import {
   AppleSpawnInterval,
   AttackCost,
@@ -33,15 +33,15 @@ import {
   UseApples,
   UseOneThread,
   UseSeasons,
-} from "../../settings";
-import { Bot } from "../../bot/classes/bot.class";
-import { Apple } from "../../apple/classes/apple.class";
-import { Organics } from "../../organics/classes/organics.class";
-import { Rock } from "../../rock/classes/rock.class";
-import {Season} from "../enums/season";
-import {BrainInput} from "../../brain/classes/brain-input.class";
-import {Point} from "../../utils/classes/point.class";
-import {EnergySource} from "../../bot/enums/energy-source.enum";
+} from '../../settings';
+import { Bot } from '../../bot/classes/bot.class';
+import { Apple } from '../../apple/classes/apple.class';
+import { Organics } from '../../organics/classes/organics.class';
+import { Rock } from '../../rock/classes/rock.class';
+import { Season } from '../enums/season';
+import { BrainInput } from '../../brain/classes/brain-input.class';
+import { Point } from '../../utils/classes/point.class';
+import { EnergySource } from '../../bot/enums/energy-source.enum';
 
 /**
  * @deprecated
@@ -196,7 +196,7 @@ export class Field {
     }
 
     this.allCells[obj.x][obj.y] = obj;
-    console.log('obj', obj)
+    console.log('obj', obj);
 
     return true;
   }
@@ -221,7 +221,7 @@ export class Field {
   repaintBot(
     b: Bot,
     newColor: [number, number, number],
-    differs: number = 1
+    differs: number = 1,
   ): void {
     for (let ix = 0; ix < FieldCellsWidth; ++ix) {
       for (let iy = 0; iy < FieldCellsHeight; ++iy) {
@@ -346,10 +346,10 @@ export class Field {
                 //{
                 const freeSpace = this.findFreeNeighbourCell(
                   tmpObj.x,
-                  tmpObj.y
+                  tmpObj.y,
                 );
 
-                console.log('freeSpace', tmpBot.id, freeSpace)
+                console.log('freeSpace', tmpBot.id, freeSpace);
 
                 if (freeSpace.x !== -1) {
                   tmpBot.takeEnergy(EnergyPassedToAChild + GiveBirthCost);
@@ -358,7 +358,7 @@ export class Field {
                     freeSpace.y,
                     EnergyPassedToAChild,
                     tmpBot,
-                    randomPercent(MutationChancePercent)
+                    randomPercent(MutationChancePercent),
                   );
                   this.addObject(newBot);
                   return;
@@ -411,7 +411,7 @@ export class Field {
                       // Kill an object
                       tmpBot.giveEnergy(
                         (this.allCells[cx][cy] as Bot).getEnergy(),
-                        EnergySource.kills
+                        EnergySource.kills,
                       );
                       this.removeBot(cx, cy);
 
@@ -421,14 +421,14 @@ export class Field {
                       // Eat organics
                       tmpBot.giveEnergy(
                         (this.allCells[cx][cy] as Organics).energy,
-                        EnergySource.ORGANICS
+                        EnergySource.ORGANICS,
                       );
                       this.removeObject(cx, cy);
                     } else if (this.allCells[cx][cy] instanceof Apple) {
                       // Eat apple
                       tmpBot.giveEnergy(
                         (this.allCells[cx][cy] as Apple).energy,
-                        EnergySource.ORGANICS
+                        EnergySource.ORGANICS,
                       );
                       this.removeObject(cx, cy);
                     } else if (
@@ -684,7 +684,7 @@ export class Field {
       const tmpBot = new Bot(
         randomVal(FieldCellsWidth),
         randomVal(FieldCellsHeight),
-        100
+        100,
       );
 
       if (!this.addObject(tmpBot)) {

@@ -6,8 +6,8 @@ import {
   NumNeuronLayers,
   UseMemoryNeuron,
 } from "../../settings";
-import {INeuron} from "../interfaces/neuron.interface";
-import {NeuronType} from "../enums/neuron-type.enum";
+import {INeuron} from "../interfaces";
+import {NeuronType} from "../enums";
 import {NeuronConnection} from "./neuron-connection.class";
 
 /**

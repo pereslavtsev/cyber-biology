@@ -8,3 +8,5 @@ type int = number;
 type int8_t = number;
 type uint = number;
 
+type short = number;
+type char = number;

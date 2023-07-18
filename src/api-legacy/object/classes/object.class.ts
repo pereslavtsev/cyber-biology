@@ -1,6 +1,6 @@
-import { nanoid } from "nanoid";
-import {ObjectTypes} from "../enums/object-types.enum";
-import {IObject} from "../interface/object.interface";
+import { nanoid } from 'nanoid';
+import { ObjectTypes } from '../enums';
+import { IObject } from '../interface';
 
 export abstract class Object implements IObject {
   private lastTickFrame: number = 0;
@@ -17,7 +17,7 @@ export abstract class Object implements IObject {
   protected constructor(
     // Coordinates
     public x: number,
-    public y: number
+    public y: number,
   ) {
     this.id = nanoid();
   }

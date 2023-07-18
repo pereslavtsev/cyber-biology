@@ -1,10 +1,11 @@
+import { FieldCellsWidth } from './field.settings';
+
 //-----------------------------------------------------------------
 // Simulation
-export const SimTickIntervalAtStart = 0;
-export const SkipFramesAtStart = 10;
-export const StartOnPause = true;
 
-export const SpawnOneAtStart = true; // TODO: false
-export const SpawnControlGroupAtStart = false; // TODO: false
-export const ControlGroupSize = 6000;
+export const TPSLimitAtStart = 60;
+export const LimitFPSAtStart = 60;
+
+export const ControlGroupSize = 2000;
+export const SpawnRocksSize = FieldCellsWidth;
 //-----------------------------------------------------------------

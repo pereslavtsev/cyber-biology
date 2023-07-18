@@ -1,5 +1,5 @@
-import type {NeuronType} from "../enums/neuron-type.enum";
-import type {NeuronConnection} from "../classes/neuron-connection.class";
+import type {NeuronType} from "../enums";
+import type {NeuronConnection} from "../classes";
 
 export interface INeuron {
   type: NeuronType;

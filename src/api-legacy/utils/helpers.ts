@@ -1,4 +1,11 @@
-import std from 'tstl';
+/**
+ * Platform dependent
+ * @param msg
+ * @param caption
+ */
+export function errorMessage(msg: string, caption: string): void {
+  alert(`${msg}\n${caption}`);
+}
 
 /**
  * Get random number (0 to max - 1)
