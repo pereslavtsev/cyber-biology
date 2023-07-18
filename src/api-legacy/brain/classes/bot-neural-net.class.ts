@@ -1,23 +1,24 @@
-import { Neuron, NeuronType } from "../neuron/classes/neuron.class";
 import {
   NeuronInputLayerIndex,
   NeuronOutputLayerIndex,
   NeuronsInLayer,
   NumNeuronLayers,
-} from "../settings";
-import { randomPercent, randomVal, repeat } from "../my-types";
+} from "../../settings";
+import { randomPercent, randomVal, repeat } from "../../my-types";
 import {BrainOutput} from "./brain-output.class";
+import {IBotNeuralNet} from "../interfaces";
+import {Neuron, NeuronType} from "../../neuron";
 
 /**
  * @deprecated
  */
-export class BotNeuralNet {
+export class BotNeuralNet implements IBotNeuralNet {
   // Activation functions
-  private activation(value: number) {
+  private activationSimple(value: float): float {
     return value >= 0.5 ? 1.0 : 0.0;
   }
 
-  private plusMinusActivation(value: number) {
+  private plusMinusActivation(value: float): float {
     if (value >= 0.5) {
       return 1.0;
     } else if (value <= -0.5) {
@@ -27,8 +28,17 @@ export class BotNeuralNet {
     return 0.0;
   }
 
-  private radialBasisActivation(value: number) {
+  private radialBasisActivation(value: float): float {
     return value >= 0.45 && value <= 0.55 ? 1.0 : 0.0;
+  }
+
+  private linearActivation(value: float): float {
+    if (value > 1.0) {
+      value = 1.0;
+    } else if (value < 0) {
+      value = 0.0;
+    }
+    return value;
   }
 
   // Clear memory
@@ -44,8 +54,8 @@ export class BotNeuralNet {
   allNeurons: Neuron[][] = [];
 
   // Neuron values and memory
-  allValues: number[][] = [];
-  allMemory: number[][] = [];
+  allValues: float[][] = [];
+  allMemory: int8_t[][] = [];
 
   // Constructors
   constructor(prototype?: BotNeuralNet) {
@@ -84,6 +94,9 @@ export class BotNeuralNet {
 
   // Process data
   process(): void {
+    // Clear all neuron values
+    this.clearValues();
+
     let value: number;
     let m: number;
     let n: Neuron;

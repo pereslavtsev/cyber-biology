@@ -3,26 +3,26 @@ import type {NeuronConnection} from "../classes/neuron-connection.class";
 
 export interface INeuron {
   type: NeuronType;
-  layer: number;
+  layer: byte;
 
-  bias: number;
+  bias: int8_t;
 
-  get numConnections(): number;
+  get numConnections(): byte;
 
   allConnections: NeuronConnection[];
 
   clone(source: INeuron): void;
 
-  addConnection(DEST_LAYER: number, DEST: number, WEIGHT?: number): void;
+  addConnection(DEST_LAYER: uint, DEST: uint, WEIGHT?: int8_t): void;
   addConnection(prototype: NeuronConnection): void;
-  addRandomConnection(): boolean;
-  removeConnection(index: number): void;
+  addRandomConnection(): bool;
+  removeConnection(index: uint): void;
 
-  getRandomConnectionIndex(): number;
+  getRandomConnectionIndex(): uint;
 
   // Does neuron have a connection,
   // returns connection index or -1
-  isConnected(LAYER: number, index: number): number;
+  isConnected(LAYER: uint, index: uint): int;
 
   setRandomBias(): void;
   setRandomType(): void;
@@ -37,13 +37,13 @@ export interface INeuron {
   clearConnections(): void;
 
   // Tunnel neuron - one with no bias and only 1 connection to same neuron in next layer with weight = 1.0f
-  setTunnel(num: number): void
+  setTunnel(num: int): void
 
-  isInactive(): boolean;
+  isInactive(): bool;
 
   // Mutation functions
   mutate_ChangeType(): void;
   mutate_ChangeBias(): void;
-  mutate_ChangeConnection(index: number): void;
+  mutate_ChangeConnection(index: uint): void;
   mutate_DeleteNeuron(): void;
 }

@@ -1,4 +1,4 @@
-import {NeuronsInLayer} from "../settings";
+import {NeuronsInLayer} from "../../settings";
 
 /**
  * @deprecated

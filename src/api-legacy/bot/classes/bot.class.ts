@@ -1,6 +1,6 @@
 // Rotations array, contains where a bot would look with every
 // position of its head
-import { BotNeuralNet } from "../../brain/bot-neural-net";
+import { BotNeuralNet } from "../../brain/classes/bot-neural-net.class";
 import {
   rand,
   randomPercent,
@@ -34,11 +34,11 @@ import {
 } from "../../settings";
 import { Neuron } from "../../neuron/classes/neuron.class";
 import { Object } from "../../object/classes/object.class";
-import {BrainInput} from "../../brain/brain-input.class";
+import {BrainInput} from "../../brain/classes/brain-input.class";
 import {EnergySource} from "../enums/energy-source.enum";
 import {s_Color} from "../interfaces/s-color.interface";
 import {presetColors} from "../consts";
-import {BrainOutput} from "../../brain/brain-output.class";
+import {BrainOutput} from "../../brain/classes/brain-output.class";
 import {NeuronType} from "../../neuron/enums/neuron-type.enum";
 import {ObjectTypes} from "../../object/enums/object-types.enum";
 

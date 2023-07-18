@@ -2,13 +2,14 @@
  * Organics class
  * @deprecated
  */
-import { Object, ObjectTypes } from "./object/classes/object.class";
+import { Object, ObjectTypes } from "../../object";
+import {IOrganics} from "../interfaces/organics.interface";
 
 /**
  * Organics class
  * @deprecated
  */
-export class Organics extends Object {
+export class Organics extends Object implements IOrganics {
   doneFalling: boolean = false;
   static readonly Type = ObjectTypes.ORGANIC_WASTE;
 

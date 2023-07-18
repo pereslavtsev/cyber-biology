@@ -1,0 +1,1 @@
+export * from './organics.interface';

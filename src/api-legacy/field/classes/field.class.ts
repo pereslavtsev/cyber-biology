@@ -1,6 +1,6 @@
 // Don't touch
-import { Object as ObjectClass } from "./object/classes/object.class";
-import { randomPercent, randomPercentX10, randomVal } from "./my-types";
+import { Object as ObjectClass } from "../../object/classes/object.class";
+import { randomPercent, randomPercentX10, randomVal } from "../../my-types";
 import {
   AppleSpawnInterval,
   AttackCost,
@@ -33,15 +33,15 @@ import {
   UseApples,
   UseOneThread,
   UseSeasons,
-} from "./settings";
-import { Bot } from "./bot/classes/bot.class";
-import { Apple } from "./apple";
-import { Organics } from "./organics";
-import { Rock } from "./rock";
-import {Season} from "./field/enums/season";
-import {BrainInput} from "./brain/brain-input.class";
-import {Point} from "./utils/classes/point.class";
-import {EnergySource} from "./bot/enums/energy-source.enum";
+} from "../../settings";
+import { Bot } from "../../bot/classes/bot.class";
+import { Apple } from "../../apple/classes/apple.class";
+import { Organics } from "../../organics/classes/organics.class";
+import { Rock } from "../../rock/classes/rock.class";
+import {Season} from "../enums/season";
+import {BrainInput} from "../../brain/classes/brain-input.class";
+import {Point} from "../../utils/classes/point.class";
+import {EnergySource} from "../../bot/enums/energy-source.enum";
 
 /**
  * @deprecated

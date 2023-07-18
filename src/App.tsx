@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { Container, Stage, useApp, useTick } from "@inlet/react-pixi";
-import { Field, RenderTypes } from "./api-legacy/field";
+import { Field, RenderTypes } from "./api-legacy/field/classes/field.class";
 import {
   FieldBackgroundColor,
   FieldHeight,
@@ -21,7 +21,7 @@ import Color from "color";
 import { Bot } from "./api-legacy/bot/classes/bot.class";
 import { Rectangle } from "./components/Rectangle";
 import { BotCell } from "./components/BotCell";
-import { Apple } from "./api-legacy/apple";
+import { Apple } from "./api-legacy/apple/classes/apple.class";
 import { AppleCell } from "./components/AppleCell";
 
 const field = new Field();

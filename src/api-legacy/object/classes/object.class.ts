@@ -1,7 +1,8 @@
 import { nanoid } from "nanoid";
 import {ObjectTypes} from "../enums/object-types.enum";
+import {IObject} from "../interface/object.interface";
 
-export abstract class Object {
+export abstract class Object implements IObject {
   private lastTickFrame: number = 0;
   readonly id: string;
 
@@ -44,7 +45,7 @@ export abstract class Object {
     return 0;
   }
 
-  static CurrentFrame: number;
+  static CurrentFrame: uint;
 
   // Returns lifetime
   getLifetime(): number {

@@ -1,3 +1,5 @@
+import std from 'tstl';
+
 /**
  * Get random number (0 to max - 1)
  * @deprecated
@@ -43,3 +45,10 @@ export function repeat(callback: (i: number) => void, times: number) {
 export function rand() {
   return randomVal(32767);
 }
+
+// High precision tick counter
+// export type Clock = std::chrono::steady_clock;
+// export type TimePoint = Clock::time_point;
+// typedef std::chrono::duration<int, std::milli> Duration;
+
+// #define TimeMSBetween(t2, t1) duration_cast<Duration>(t2 - t1).count()
