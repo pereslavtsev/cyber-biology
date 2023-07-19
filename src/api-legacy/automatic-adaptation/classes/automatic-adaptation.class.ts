@@ -1,27 +1,36 @@
 import std, { Vector } from 'tstl';
 import type { IAutomaticAdaptation } from '../interfaces';
 import { ParameterSweep } from './parameter-sweep.class';
+import {BotMaxEnergyInitial, FieldCellsWidth} from "../../settings";
+import {Field} from "../../field";
 
 export class AutomaticAdaptation implements IAutomaticAdaptation {
+  constructor(f: Field, m: Main) {
+    this.field = f;
+    this.params = f.params;
+    this.sim = m;
+  }
+
   // private readonly makeAutosave: bool = false;
 
-  private currentTick: uint;
+  private currentTick: uint = 0;
 
   private inProgress: bool;
 
-  private adaptationBeginTick: uint;
-  private phaseBeginTick: uint;
-  private phase: uint;
-  private numPhases: uint;
+  private adaptationBeginTick: uint = 0;
+  private phaseBeginTick: uint = 0;
+  private phase: uint = 0;
+  private numPhases: uint = 0;
 
-  private iteration: uint;
-  private numIterations: uint;
+  private iteration: uint = 0;
+  private numIterations: uint = 0;
 
-  // const char* phaseDesc = NULL;
+  private phaseDesc: string | null = null;
 
   private history: Vector<Vector<uint>> = new Vector<Vector<uint>>([]);
   private avg_history: Vector<uint> = new Vector<uint>([]);
 
+  // done
   private calculateHistoryAverage(): void {
     this.avg_history.clear();
 
@@ -55,7 +64,28 @@ export class AutomaticAdaptation implements IAutomaticAdaptation {
 
     // this.printInLog("Epoch: " + to_string(iteration) + "/" + to_string(numIterations));
   }
-  private finish(): void;
+
+
+  private finish(): void {
+    this.phaseDesc = null;
+    this.printInLog("Done!");
+
+    if (this.iteration === this.numIterations)
+    {
+      this.printInLog("All epochs are done");
+
+      if(this.numIterations > 1) {
+        this.calculateHistoryAverage();
+      }
+
+      this.inProgress = false;
+      this.sim.pause();
+    }
+    // else
+    // {
+    //   (*this.*Reset_func)();
+    // }
+  }
 
   private sweep: ParameterSweep = new ParameterSweep();
 
@@ -70,11 +100,62 @@ export class AutomaticAdaptation implements IAutomaticAdaptation {
     // AALog.append(s.c_str());
     // sim->Print(s);
   }
-  private plot(): void;
+  private plot(): void {
+    // TODO:
+  }
 
-  private beginDivers(): void;
-  private beginWinds(): void;
+  private beginDivers(): void {
+    this.reset();
 
+    if (BotMaxEnergyInitial < 300)
+    {
+      this.printInLog("BotMaxEnergyInitial should be at least 300!");
+
+      return;
+    }
+
+    if (FieldCellsWidth < 4000)
+    {
+      this.printInLog("FieldCellsWidth should be > 4000!");
+
+      return;
+    }
+
+    this.printInLog("[Divers] Started...");
+
+    this.inProgress = true;
+    this.numPhases = 11;
+    // AA_func = &AutomaticAdaptation::AutoAdaptDivers;
+    // Reset_func = &AutomaticAdaptation::BeginDivers;
+    // params->PSreward = 25;
+
+    this.field.placeWall();
+
+    this.sweep.waitPopulation(10000, 100);
+
+    this.nextPhase();
+  }
+  private beginWinds(): void {
+
+  }
+
+  private nextPhase(desc: string): void {
+    if (this.phase == 0)
+    {
+      this.newEpoch();
+    }
+
+    ++this.phase;
+    this.phaseDesc = desc;
+
+    let s: string = "Phase " + to_string(phase);
+    s += "/" + to_string(numPhases);
+    s += " ticks: " + to_string(currentTick - phaseBeginTick);
+
+    this.printInLog(s);
+  }
+
+  // done
   private stop(): void {
     this.inProgress = false;
   }

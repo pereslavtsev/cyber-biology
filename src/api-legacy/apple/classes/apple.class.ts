@@ -1,4 +1,3 @@
-import { DefaultAppleEnergy } from "../../settings";
 import { Object, ObjectTypes} from "../../object";
 import {IApple} from "../interfaces";
 

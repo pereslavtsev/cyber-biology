@@ -13,6 +13,7 @@ export class ParameterSweep implements IParameterSweep {
   private addToChartRate: uint = 0;
   private chartValPrev: uint = 0;
 
+  // done
   private addToChart(): void {
     this.history.push_back(this.currentTick);
   }
@@ -21,16 +22,19 @@ export class ParameterSweep implements IParameterSweep {
   public sweep_rate: uint = 0;
   public waitForPopulation: uint = 0;
 
+  // done
   public setTick(tick: uint): void {
     this.currentTick = tick;
   }
 
+  // done
   public waitPopulation(pop: int, count: int): void {
     this.waitForPopulation = pop;
     this.sweep_counter = count;
     this.beginTick = this.currentTick;
   }
 
+  // done
   beginSweep(p: IPointer<int>, begin: int, inc: int, goal: int, pop: int, count: int, addToChartEvery: int = 0): void {
     this.toSweep = p;
     this.sweepIncrement = inc;
@@ -46,6 +50,7 @@ export class ParameterSweep implements IParameterSweep {
     this.beginTick = this.currentTick;
   }
 
+  // done
   public checkSweep(numBots: uint): bool {
     if (this.toSweep) {
       if (
@@ -92,6 +97,7 @@ export class ParameterSweep implements IParameterSweep {
     return false;
   }
 
+  // done
   public clear(): void {
     this.currentTick = 0;
     this.beginTick = 0;
