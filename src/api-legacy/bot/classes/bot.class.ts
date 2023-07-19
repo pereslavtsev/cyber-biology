@@ -1,13 +1,6 @@
 // Rotations array, contains where a bot would look with every
 // position of its head
-import { BotNeuralNet } from "../../brain/classes/bot-neural-net.class";
-import {
-  rand,
-  randomPercent,
-  randomPercentX10,
-  randomVal,
-  repeat,
-} from "../../my-types";
+import { BotNeuralNet } from '../../brain';
 import {
   BotDiesIfEnergyOverflow,
   ChangeColorSlightly,
@@ -31,16 +24,18 @@ import {
   StunAfterBirth,
   TotalMutationChancePercentX10,
   UseTotalMutation,
-} from "../../settings";
-import { Neuron } from "../../neuron/classes/neuron.class";
-import { Object } from "../../object/classes/object.class";
-import {BrainInput} from "../../brain/classes/brain-input.class";
-import {EnergySource} from "../enums/energy-source.enum";
-import {s_Color} from "../interfaces/s-color.interface";
-import {presetColors} from "../consts";
-import {BrainOutput} from "../../brain/classes/brain-output.class";
-import {NeuronType} from "../../neuron/enums/neuron-type.enum";
-import {ObjectTypes} from "../../object/enums/object-types.enum";
+} from '../../settings';
+import { Neuron } from '../../neuron';
+import { Object } from '../../object';
+import { BrainInput } from '../../brain';
+import { EnergySource } from '../enums';
+import { s_Color } from '../interfaces';
+import {presetColors, Rotations} from '../consts';
+import { BrainOutput } from '../../brain';
+import { NeuronType } from '../../neuron';
+import { ObjectTypes } from '../../object';
+import type {IBot} from "../interfaces";
+import {Color, Point, randomVal} from "../../utils";
 
 type summary_return = [
   simple: number,
@@ -49,16 +44,31 @@ type summary_return = [
   memory: number,
   connections: number,
   deadend: number,
-  neurons: number
+  neurons: number,
 ];
 
 /**
  * Bot class
  * @deprecated
  */
-export class Bot extends Object {
+export class Bot extends Object implements IBot {
   // Rotation, see Rotations[]
-  direction: number = 0;
+  protected direction: int = 0;
+
+  // That is what a bot is looking at
+  protected lookAt: Point;
+  protected lookAt_x: int, lookAt_y: int;
+
+  calculateLookAt(): void {
+    const lookAt = Rotations[this.direction];
+
+    lookAt.shift(this.x, this.y);
+
+    lookAt.x = this.pField.validateX(lookAt.x);
+
+    this.lookAt_x = lookAt.x;
+    this.lookAt_y = lookAt.y;
+  }
 
   brain: BotNeuralNet = new BotNeuralNet(); // ???
 
@@ -247,7 +257,6 @@ export class Bot extends Object {
 
   // Use neural network (feed forward)
   think(input: BrainInput): BrainOutput {
-
     // Stunned means the creature can not act
     if (this.stunned) {
       --this.stunned;
@@ -373,7 +382,7 @@ export class Bot extends Object {
   }
 
   // Get bot color
-  getColor(): [number, number, number] {
+  getColor(): Color {
     return this.color;
   }
 
@@ -491,7 +500,7 @@ export class Bot extends Object {
     Y: number,
     Energy: number = 100,
     prototype?: Bot,
-    mutate: boolean = false
+    mutate: boolean = false,
   ) {
     super(X, Y);
     // New bot

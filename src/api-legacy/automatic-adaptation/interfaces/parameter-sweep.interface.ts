@@ -1,33 +1,15 @@
-import {Vector} from "tstl";
+import type { Vector, IPointer } from 'tstl';
 
-export interface ParameterSweep
-{
-// private:
-
-  currentTick: uint;
-  beginTick: uint;
-
-  toSweep: int;
-
-  sweepIncrement: int;
-  sweepGoal: int;
-
-  addToChartRate: uint;
-  chartValPrev: uint;
-
-  addToChart(): void;
-
-// public:
-
+export interface IParameterSweep {
   sweep_counter: uint;
   sweep_rate: uint;
   waitForPopulation: uint;
 
-  SetTick(tick): void;
-  WaitPopulation(pop: int, count: int ): void;
-  CheckSweep(numBots): bool;
-   Clear(): void;
-
+  setTick(tick: uint): void;
+  waitPopulation(pop: int, count: int): void;
+  beginSweep(p: IPointer<int>, begin: int, inc: int, goal: int, pop: int, count: int, addToChartEvery?: int): void;
+  checkSweep(numBots: uint): bool;
+  clear(): void;
 
   history: Vector<uint>;
 }

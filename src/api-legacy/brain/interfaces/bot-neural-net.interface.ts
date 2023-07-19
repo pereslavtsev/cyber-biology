@@ -1,20 +1,7 @@
-import type {INeuron} from "../../neuron";
+import type { INeuron } from '../../neuron';
+import type { IBrainInput } from './brain-input.interface';
 
 export interface IBotNeuralNet {
-// private:
-  // Activation functions
-  activationSimple(value: float): float;
-  plusMinusActivation(value: float): float;
-  radialBasisActivation(value: float): float;
-  linearActivation(value: float): float;
-
-  clearMemory(): void;
-  clearValues(): void;
-
-  setDummy(): void;
-
-//public:
-
   allNeurons: INeuron[][];
 
   // Neuron values and memory

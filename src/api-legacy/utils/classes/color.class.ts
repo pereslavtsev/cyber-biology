@@ -6,6 +6,9 @@ export class Color implements IColor {
   c: [short, short, short] = [0, 0, 0];
   change_vector: [char, char, char] = [0, 0, 0];
 
+  constructor() {
+  }
+
   set(r: number, g: number, b: number): void {
     this.c[0] = r;
     this.c[1] = g;

@@ -1,4 +1,4 @@
-import {Point} from "pixi.js";
+import { Point } from '../utils';
 
 /**
  * @deprecated
@@ -12,6 +12,15 @@ export const Rotations: Point[] = [
   new Point(-1, 1),
   new Point(-1, 0),
   new Point(-1, -1),
+];
+
+/**
+ * @deprecated
+ */
+export const RotationsReverse: [number, number, number][] = [
+  [7, 6, 5],
+  [0, -1, 4],
+  [1, 2, 3],
 ];
 
 /**

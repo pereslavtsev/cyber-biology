@@ -1,33 +1,37 @@
-import {NeuronsInLayer} from "../../settings";
+import { IBrainOutput } from '../interfaces/brain-output.interface';
 
 /**
  * @deprecated
  */
-export class BrainOutput {
-  static NumFields: number = NeuronsInLayer;
-
-  get rotate(): number {
+export class BrainOutput implements IBrainOutput {
+  get desired_rotation_x(): int {
     return Math.round(this.fields[0]);
   }
-  get move(): number {
+  get desired_rotation_y(): int {
     return Math.round(this.fields[1]);
   }
-  get photosynthesis(): number {
+
+  get move(): int {
     return Math.round(this.fields[2]);
   }
-  get divide(): number {
+  get photosynthesis(): int {
     return Math.round(this.fields[3]);
   }
-  set divide(value: number) {
-    this.fields[3] = Math.round(value);
-  }
-  get attack(): number {
+  get attack(): int {
     return Math.round(this.fields[4]);
   }
-
-  readonly fields: number[] = [0, 0, 0, 0, 0];
-
-  static GetEmptyBrain(): BrainOutput {
-    return new BrainOutput();
+  get digestOrganics(): int {
+    return Math.round(this.fields[5]);
   }
+
+  get divide_num(): int {
+    return Math.round(this.fields[6]);
+  }
+  get divide_energy(): int {
+    return Math.round(this.fields[7]);
+  }
+
+  readonly fields: [int, int, int, int, int, int, int, int] = [
+    0, 0, 0, 0, 0, 0, 0, 0,
+  ];
 }

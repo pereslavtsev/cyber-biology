@@ -4,7 +4,6 @@ import {
   NeuronsInLayer,
   NumNeuronLayers,
 } from "../../settings";
-import { randomPercent, randomVal, repeat } from "../../my-types";
 import {BrainOutput} from "./brain-output.class";
 import {IBotNeuralNet} from "../interfaces";
 import {Neuron, NeuronType} from "../../neuron";

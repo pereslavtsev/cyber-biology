@@ -1,5 +1,5 @@
-import { ObjectTypes } from '../enums';
-import { IField } from '../../field/interfaces/field.interface';
+import type { ObjectTypes } from '../enums';
+import type { IField } from '../../field';
 
 export interface IObject {
   // private:
