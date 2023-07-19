@@ -1,29 +1,75 @@
-import { nanoid } from 'nanoid';
-import { ObjectTypes } from '../enums';
-import { IObject } from '../interface';
+import {ObjectTypes} from '../enums';
+import {IObject} from '../interface';
+import {Field} from "../../field";
+import {FieldCellSize, FieldCellsWidth} from "../../settings";
 
 export abstract class Object implements IObject {
-  private lastTickFrame: number = 0;
-  readonly id: string;
+  // Prev. tick frame number
+  private lastTickFrame: uint = 0;
+
+  // X coordinate, corrected with Field::RenderX
+  protected screenX: int;
+
+  protected calcScreenX(): void {
+    this.screenX = this.x - Field.renderX;
+
+    if (this.screenX < 0)
+    {
+      this.screenX += FieldCellsWidth;
+    }
+  }
+
+  protected calcObjectRect(): void {
+    this.object_rect =
+      {
+        this.FieldX + this.screenX * FieldCellSize,
+        this.FieldY + this.y * FieldCellSize,
+        FieldCellSize,
+        FieldCellSize
+      };
+  }
+
+  protected calcObjectRectShrinked(shrink: int): void {
+
+  }
 
   // Time in ticks since object was created
   protected lifetime: number = 0;
-
-  // abstract draw(): void;
 
   // Object type
   static readonly Type: ObjectTypes = ObjectTypes.ABSTRACT;
 
   protected constructor(
     // Coordinates
-    public x: number,
-    public y: number,
+    x: int,
+    y: int,
   ) {
-    this.id = nanoid();
+    this.x = x;
+    this.y = y;
+    this.energy = 0;
+  }
+
+  public x: int, y: int;
+
+  // If an object stores energy it's here
+  public energy: int;
+
+  type(): ObjectTypes {
+    return ObjectTypes.ABSTRACT;
+  }
+
+  image_sensor_val(): float {
+    return NaN;
   }
 
   // Basic 'dummy' draw function if needed
-  abstract draw(): void;
+  draw(): void {
+    this.CalcScreenX();
+    this.calcObjectRect();
+  }
+
+  abstract drawEnergy(): void;
+  abstract drawPredators(): void;
 
   /**
    * This function returns true when the creature dies
@@ -34,7 +80,7 @@ export abstract class Object implements IObject {
    *  1 - object destroyed
    *  2 - nothing to do (last tick frame matches current frame)
    */
-  tick(): 0 | 1 | 2 {
+  tick(): int {
     if (Object.CurrentFrame === this.lastTickFrame) {
       return 2;
     }
@@ -51,4 +97,7 @@ export abstract class Object implements IObject {
   getLifetime(): number {
     return this.lifetime;
   }
+
+// Texture rectangle
+  protected readonly static image_rect: any;
 }

@@ -59,7 +59,7 @@ export class Bot extends Object implements IBot {
   protected lookAt: Point;
   protected lookAt_x: int, lookAt_y: int;
 
-  calculateLookAt(): void {
+  protected calculateLookAt(): void {
     const lookAt = Rotations[this.direction];
 
     lookAt.shift(this.x, this.y);
